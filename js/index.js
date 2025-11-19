@@ -1,127 +1,130 @@
-var swiper = new Swiper(".banner .mySwiper", {
-  spaceBetween: 30,
-  centeredSlides: true,
-  autoplay: {
-    delay: 2500,
-    disableOnInteraction: false,
-  },
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true,
-  },
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-});
+document.addEventListener('DOMContentLoaded', () => {
 
-$(function () {
-  $('.maps .maps_i .m_button div .mbright').on({
-    click: function () {
-      $('.maps .maps_i .m_info .m_2').css({
-        display: 'flex'
-      })
-      $('.maps .maps_i .m_button .mbb2').css({
-        display: 'flex'
-      })
-      $('.maps .maps_i .m_button .mbb1').css({
-        display: 'none'
-      })
-      $('.maps .maps_i .m_info .m_1').css({
-        display: 'none'
-      })
-    }
-  })
-  $('.maps .maps_i .m_button div .mbleft').on({
-    click: function () {
-      $('.maps .maps_i .m_info .m_2').css({
-        display: 'none'
-      })
-      $('.maps .maps_i .m_button .mbb2').css({
-        display: 'none'
-      })
-      $('.maps .maps_i .m_button .mbb1').css({
-        display: 'flex'
-      })
-      $('.maps .maps_i .m_info .m_1').css({
-        display: 'flex'
-      })
-    }
-  })
-})
+  // 1. 쿠폰 토글
+  const couponHeaders = document.querySelectorAll('.m_right .mr_top .mrt_bot .coupon > div:first-child');
 
-$("nav .menu>li").on({
-  mouseenter: function () {
-    $(".submenu", this).stop().slideDown(200);
-  },
-  mouseleave: function () {
-    $(".submenu", this).stop().slideUp(500);
+  couponHeaders.forEach(header => {
+    header.addEventListener('click', () => {
+      header.parentElement.classList.toggle('active');
+    });
+  });
+
+
+  // 2. 슬라이더
+  const sliderWrapper = document.querySelector('.slider-wrapper');
+  const slides = document.querySelectorAll('.slide');
+  const prevButton = document.querySelector('.slider-arrow.prev');
+  const nextButton = document.querySelector('.slider-arrow.next');
+  const dots = document.querySelectorAll('.dot');
+
+  const slideCount = slides.length;
+  let translateIdx = 1;
+  const speedTime = 500;
+
+  const firstClone = slides[0].cloneNode(true);
+  const lastClone = slides[slideCount - 1].cloneNode(true);
+
+  sliderWrapper.appendChild(firstClone);
+  sliderWrapper.insertBefore(lastClone, slides[0]);
+
+  const newSlideCount = slideCount + 2;
+  sliderWrapper.style.width = `${newSlideCount * 100}%`;
+  sliderWrapper.style.transform = `translateX(-${1 * (100 / newSlideCount)}%)`;
+
+  function moveSlide(idx) {
+    translateIdx = idx;
+    sliderWrapper.style.transition = `transform ${speedTime}ms ease-in-out`;
+    sliderWrapper.style.transform = `translateX(-${translateIdx * (100 / newSlideCount)}%)`;
+
+    let dotIdx = translateIdx - 1;
+    if (dotIdx < 0) dotIdx = slideCount - 1;
+    if (dotIdx >= slideCount) dotIdx = 0;
+
+    dots.forEach(dot => dot.classList.remove('active'));
+    if (dots[dotIdx]) dots[dotIdx].classList.add('active');
+
+    if (translateIdx === newSlideCount - 1) {
+      setTimeout(() => {
+        sliderWrapper.style.transition = 'none';
+        translateIdx = 1;
+        sliderWrapper.style.transform = `translateX(-${translateIdx * (100 / newSlideCount)}%)`;
+      }, speedTime);
+    } else if (translateIdx === 0) {
+      setTimeout(() => {
+        sliderWrapper.style.transition = 'none';
+        translateIdx = slideCount;
+        sliderWrapper.style.transform = `translateX(-${translateIdx * (100 / newSlideCount)}%)`;
+      }, speedTime);
+    }
   }
-})
 
-$(function () {
-  $(".ham").on('click', function () {
-    $(".m_nav").stop().slideDown(300)
+  let autoSlideInterval;
+
+  function startAutoSlide() {
+    autoSlideInterval = setInterval(() => {
+      moveSlide(translateIdx + 1);
+    }, 3000);
+  }
+
+  function stopAutoSlide() {
+    clearInterval(autoSlideInterval);
+  }
+
+  nextButton.addEventListener('click', () => {
+    stopAutoSlide();
+    if (translateIdx >= newSlideCount - 1) return;
+    moveSlide(translateIdx + 1);
+    startAutoSlide();
   });
-  $(".close").on('click', function () {
-    $(".m_nav").stop().slideUp(300)
+
+  prevButton.addEventListener('click', () => {
+    stopAutoSlide();
+    if (translateIdx <= 0) return;
+    moveSlide(translateIdx - 1);
+    startAutoSlide();
   });
 
-
-  $(".m_nav .menu>li").on('click', function () {
-    $(this).siblings().find('.submenu').stop().slideUp();
-    $(this).children('.submenu').stop().slideToggle();
-
+  dots.forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      stopAutoSlide();
+      const targetDotIdx = parseInt(e.target.dataset.slide);
+      moveSlide(targetDotIdx + 1);
+      startAutoSlide();
+    });
   });
+
+  startAutoSlide();
 });
 
-$(function () {
-  // aos
-  AOS.init({
-    disable: function () {
-      let maxWidth = 768;
-      return window.innerWidth < maxWidth
-    }
+
+// 3. 햄버거
+$(document).ready(function() {
+  const $aside = $('aside');
+  const $overlay = $('.overlay');
+  const $body = $('body');
+  const $btnOpen = $('.mobile-menu-toggle');
+  const $btnClose = $('.close');
+
+  function openMenu() {
+    $aside.addClass('active');
+    $overlay.addClass('active');
+  }
+
+  function closeMenu() {
+    $aside.removeClass('active');
+    $overlay.removeClass('active');
+  }
+
+  $btnOpen.on('click', function(e) {
+    e.preventDefault();
+    openMenu();
   });
-})
 
-$(function () {
-
-  $(".menu>li").on({
-    mouseenter: function () {
-
-      $(".menu>li").removeClass("active");
-      $(".submenu").removeClass("active");
-
-      $(this).addClass("active");
-      $(this).find(".submenu").addClass("active");
-      $(".submenu_bg").addClass("active")
-    }
+  $btnClose.on('click', function() {
+    closeMenu();
   });
 
-  $("header").on('mouseleave', function () {
-    $(".menu>li").removeClass("active");
-    $(".submenu").removeClass("active");
-    $(".submenu_bg").removeClass("active")
-  }); z
-});
-
-$(function () {
-  $('.top, .m_top').on('click', function () {
-    $(window).scrollTop(0)
-  })
-});
-
-var swiper = new Swiper(".main_i.mySwiper", {
-  pagination: {
-    el: ".swiper-pagination",
-    dynamicBullets: true,
-  },
-});
-
-var swiper = new Swiper(".motto_i.mySwiper", {
-  pagination: {
-    el: ".swiper-pagination",
-    dynamicBullets: true,
-  },
+  $overlay.on('click', function() {
+    closeMenu();
+  });
 });
