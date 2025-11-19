@@ -128,3 +128,49 @@ $(document).ready(function() {
     closeMenu();
   });
 });
+
+// 4. 사이드바 미니 슬라이더 기능
+function setupMiniSlider(containerSelector) {
+  const container = document.querySelector(containerSelector);
+  if (!container) return; 
+
+  const prevBtn = container.querySelector('.btn button:first-child'); // 왼쪽 버튼
+  const nextBtn = container.querySelector('.btn button:last-child');  // 오른쪽 버튼
+  const currentNumElement = container.querySelector('.header .counter b'); // 숫자 부분
+  
+  // 해당 박스 안의 모든 slide-group 찾기
+  const slides = container.querySelectorAll('.body .slide-group');
+  let currentIndex = 0;
+  const totalSlides = slides.length;
+
+  function updateSlider() {
+    // 1. 싹 다 숨김
+    slides.forEach(slide => slide.classList.remove('active'));
+    // 2. 현재 순서만 보임
+    slides[currentIndex].classList.add('active');
+    // 3. 숫자 업데이트
+    if(currentNumElement) {
+        currentNumElement.textContent = (currentIndex + 1) + " ";
+    }
+  }
+
+  // 다음 버튼
+  nextBtn.addEventListener('click', () => {
+    currentIndex++;
+    if (currentIndex >= totalSlides) currentIndex = 0;
+    updateSlider();
+  });
+
+  // 이전 버튼
+  prevBtn.addEventListener('click', () => {
+    currentIndex--;
+    if (currentIndex < 0) currentIndex = totalSlides - 1;
+    updateSlider();
+  });
+}
+
+// HTML 로딩 후 실행
+document.addEventListener('DOMContentLoaded', () => {
+  setupMiniSlider('.mr_bot .mid'); // 위쪽 (새로 나왔어요) 연결
+  setupMiniSlider('.mr_bot .bot'); // 아래쪽 (이런 메뉴는 어때요) 연결
+});

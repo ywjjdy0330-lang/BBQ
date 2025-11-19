@@ -636,20 +636,26 @@ main .main_i .m_left .ml_bot .event .el_box,
   min-width: 0;
 }
 
-main .main_i .m_left .ml_bot .event .box figure {
-  width: 100%;
-  height: auto;
-}
-
 main .main_i .m_left .ml_bot .event .box {
   text-align: center;
 }
+main .main_i .m_left .ml_bot .event .box figure {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
 
 main .main_i .m_left .ml_bot .event .box figure img {
   width: 100%;
   height: 100%;
   max-height: 224px;
   object-fit: cover;
+  transition: 0.3s;
+}
+
+main .main_i .m_left .ml_bot .event .box:hover figure img {
+  transform: scale(1.1);
 }
 
 main .main_i .m_left .ml_bot .event .box p {
@@ -978,6 +984,16 @@ main .main_i .m_left .ml_top {
   aspect-ratio: 957 / 452;
   position: relative;
   overflow: hidden;
+}
+
+.mr_bot .body .slide-group {
+  display: none;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.mr_bot .body .slide-group.active {
+  display: flex;
 }
 
 .slider-container {
