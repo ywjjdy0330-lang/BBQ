@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // 3. 햄버거
-$(document).ready(function() {
+$(document).ready(function () {
   const $aside = $('aside');
   const $overlay = $('.overlay');
   const $body = $('body');
@@ -115,53 +115,53 @@ $(document).ready(function() {
     $overlay.removeClass('active');
   }
 
-  $btnOpen.on('click', function(e) {
+  $btnOpen.on('click', function (e) {
     e.preventDefault();
     openMenu();
   });
 
-  $btnClose.on('click', function() {
+  $btnClose.on('click', function () {
     closeMenu();
   });
 
-  $overlay.on('click', function() {
+  $overlay.on('click', function () {
     closeMenu();
   });
 });
 
-// 4. 사이드바 미니 슬라이더 기능
+// 4. 사이드바
 function setupMiniSlider(containerSelector) {
   const container = document.querySelector(containerSelector);
-  if (!container) return; 
+  if (!container) return;
 
-  const prevBtn = container.querySelector('.btn button:first-child'); // 왼쪽 버튼
-  const nextBtn = container.querySelector('.btn button:last-child');  // 오른쪽 버튼
-  const currentNumElement = container.querySelector('.header .counter b'); // 숫자 부분
-  
-  // 해당 박스 안의 모든 slide-group 찾기
+  const prevBtn = container.querySelector('.btn button:first-child');
+  const nextBtn = container.querySelector('.btn button:last-child');
+  const currentNumElement = container.querySelector('.header .counter b');
+
+
   const slides = container.querySelectorAll('.body .slide-group');
   let currentIndex = 0;
   const totalSlides = slides.length;
 
   function updateSlider() {
-    // 1. 싹 다 숨김
+
     slides.forEach(slide => slide.classList.remove('active'));
-    // 2. 현재 순서만 보임
+
     slides[currentIndex].classList.add('active');
-    // 3. 숫자 업데이트
-    if(currentNumElement) {
-        currentNumElement.textContent = (currentIndex + 1) + " ";
+
+    if (currentNumElement) {
+      currentNumElement.textContent = (currentIndex + 1) + " ";
     }
   }
 
-  // 다음 버튼
+
   nextBtn.addEventListener('click', () => {
     currentIndex++;
     if (currentIndex >= totalSlides) currentIndex = 0;
     updateSlider();
   });
 
-  // 이전 버튼
+
   prevBtn.addEventListener('click', () => {
     currentIndex--;
     if (currentIndex < 0) currentIndex = totalSlides - 1;
@@ -169,8 +169,30 @@ function setupMiniSlider(containerSelector) {
   });
 }
 
-// HTML 로딩 후 실행
+// 팝업
 document.addEventListener('DOMContentLoaded', () => {
-  setupMiniSlider('.mr_bot .mid'); // 위쪽 (새로 나왔어요) 연결
-  setupMiniSlider('.mr_bot .bot'); // 아래쪽 (이런 메뉴는 어때요) 연결
+  setupMiniSlider('.mr_bot .mid');
+  setupMiniSlider('.mr_bot .bot');
+});
+
+const popupOverlay = document.querySelector('.popup_overlay');
+const closeBtn = document.querySelector('.pf_right');
+const checkbox = document.querySelector('#no-look');
+
+const hideDate = localStorage.getItem('hidePopupDate');
+const today = new Date().toDateString();
+
+if (hideDate === today) {
+  popupOverlay.style.display = 'none';
+} else {
+  popupOverlay.style.display = 'block';
+}
+
+closeBtn.addEventListener('click', function () {
+
+  if (checkbox.checked) {
+    localStorage.setItem('hidePopupDate', today);
+  }
+
+  popupOverlay.style.display = 'none';
 });
