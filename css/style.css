@@ -1436,7 +1436,7 @@ footer .footer_i .footer_bot>span {
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1024px) {
 
   main .main_i {
     display: flex;
@@ -1472,16 +1472,40 @@ footer .footer_i .footer_bot>span {
     order: 4;
     padding: 20px;
     grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid rgb(221, 221, 221);
   }
 
   .mr_bot .bot {
     order: 5;
     padding: 25px;
+    border: none;
   }
 
   .mr_bot .mid {
     order: 6;
     padding: 25px;
+    border: none;
+    position: relative;
+  }
+
+  .mr_bot .mid::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: calc(100% - 50px);
+    height: 1px;
+    background-color: rgb(221, 221, 221);
+    top: 0;
+  }
+
+  .mr_bot .mid::after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: calc(100% - 50px);
+    height: 1px;
+    background-color: rgb(221, 221, 221);
+    bottom: 0;
   }
 
   main .main_i .m_left .ml_bot {
